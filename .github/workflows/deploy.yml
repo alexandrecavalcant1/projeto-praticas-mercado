@@ -1,0 +1,25 @@
+name: Deploy Automático para Produção (Oracle Cloud)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: 🚀 Enviar Código para o Servidor Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Obter o código do repositório
+        uses: actions/checkout@v3
+
+      - name: 📂 Sincronizar arquivos com o Servidor via SSH/SCP
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: "*.php"
+          target: "/var/www/html/"
