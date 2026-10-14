@@ -4,7 +4,7 @@ Este repositório contém o protótipo de software desenvolvido para a avaliaç�
 
 ## 🚀 Eixo 1: Infraestrutura e Acesso
 - **IP Público:** `163.176.146.51`
-- **Endereço SSL/TLS:** `https://163.176.146.51.nip.io`
+- **Endereço SSL/TLS:** `- **Domínio SSL:** `https://projetoforense.freedynamicdns.net``
 - **Servidor Web:** Nginx (com redirecionamento automático de HTTP para HTTPS e suporte a TLS/PQC)
 - **Segurança de Acesso:** Chaves SSH obrigatórias e Fail2Ban configurado na porta 22.
 
