@@ -31,22 +31,25 @@ if (!isset($_SESSION['form_start_time'])) {
         }
 
         body {
-            background-color: #0f172a;
+            background: radial-gradient(circle at 10% 20%, #090d16 0%, #0f172a 90%);
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #e2e8f0;
+            overflow: hidden;
         }
 
         .login-wrapper {
             width: 100%;
-            max-width: 1050px;
-            height: 620px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            max-width: 1100px;
+            height: 640px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
             display: flex;
             overflow: hidden;
             margin: 20px;
@@ -54,37 +57,51 @@ if (!isset($_SESSION['form_start_time'])) {
 
         /* Coluna da Esquerda (Painel Visual / Tema UNCISAL & Forense) */
         .login-banner {
-            flex: 1.1;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.95)), 
-                        url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+            flex: 1.2;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.95)), 
+                        url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
             color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 40px;
-            border-right: 1px solid #334155;
+            padding: 50px;
+            border-right: 1px solid rgba(51, 65, 85, 0.6);
+            position: relative;
+        }
+
+        .login-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(15, 23, 42, 0.8));
+            pointer-events: none;
         }
 
         .banner-header h1 {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 12px;
             color: #38bdf8;
             letter-spacing: -0.5px;
+            z-index: 1;
+        }
+
+        .banner-body {
+            z-index: 1;
         }
 
         .banner-body h3 {
-            font-size: 2.1rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 1.25;
             margin-bottom: 15px;
             color: #f8fafc;
         }
 
         .banner-body p {
-            font-size: 0.95rem;
+            font-size: 1rem;
             opacity: 0.85;
             line-height: 1.6;
             color: #94a3b8;
@@ -92,50 +109,52 @@ if (!isset($_SESSION['form_start_time'])) {
 
         .tech-badge {
             display: inline-block;
-            background: rgba(56, 189, 248, 0.1);
+            background: rgba(56, 189, 248, 0.12);
             color: #38bdf8;
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-family: 'JetBrains Mono', monospace;
-            margin-bottom: 15px;
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            margin-bottom: 18px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
         }
 
         .banner-footer {
             font-size: 0.85rem;
             opacity: 0.6;
             font-family: 'JetBrains Mono', monospace;
+            z-index: 1;
         }
 
         /* Coluna da Direita (Formulário) */
         .login-form-container {
             flex: 1;
-            padding: 50px 40px;
+            padding: 50px 45px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: #1e293b;
+            background: rgba(30, 41, 59, 0.4);
         }
 
         .login-header {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .login-header h2 {
-            font-size: 1.75rem;
+            font-size: 1.85rem;
             color: #f8fafc;
             font-weight: 700;
             margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
 
         .login-header p {
             color: #94a3b8;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
         }
 
         .input-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .input-group label {
@@ -143,7 +162,8 @@ if (!isset($_SESSION['form_start_time'])) {
             font-size: 0.85rem;
             font-weight: 600;
             color: #cbd5e1;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
         }
 
         .input-with-icon {
@@ -152,28 +172,35 @@ if (!isset($_SESSION['form_start_time'])) {
 
         .input-with-icon i {
             position: absolute;
-            left: 15px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: #64748b;
+            font-size: 1rem;
+            transition: color 0.2s;
         }
 
         .input-with-icon input {
             width: 100%;
-            padding: 12px 15px 12px 45px;
+            padding: 14px 16px 14px 48px;
             border: 1px solid #475569;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.95rem;
             color: #f8fafc;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             outline: none;
-            background-color: #0f172a;
+            background-color: rgba(15, 23, 42, 0.6);
         }
 
         .input-with-icon input:focus {
             border-color: #38bdf8;
-            background-color: #1e293b;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+            background-color: rgba(15, 23, 42, 0.9);
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+        }
+
+        .input-with-icon input:focus + i,
+        .input-with-icon input:not(:placeholder-shown) + i {
+            color: #38bdf8;
         }
 
         /* CAMPO ARMADILHA (HONEYPOT) */
@@ -183,57 +210,76 @@ if (!isset($_SESSION['form_start_time'])) {
 
         .btn-submit {
             width: 100%;
-            padding: 12px;
-            background-color: #0284c7;
+            padding: 14px;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             color: #ffffff;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 5px;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
         }
 
         .btn-submit:hover {
-            background-color: #0369a1;
+            background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
         }
 
         .alert-msg {
-            padding: 10px 15px;
+            padding: 12px 16px;
             border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
+            font-size: 0.88rem;
+            margin-bottom: 20px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .alert-danger {
-            background-color: rgba(239, 68, 68, 0.1);
+            background-color: rgba(239, 68, 68, 0.12);
             color: #f87171;
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
         .alert-warning {
-            background-color: rgba(245, 158, 11, 0.1);
+            background-color: rgba(245, 158, 11, 0.12);
             color: #fbbf24;
             border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         .card-footer {
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: center;
             font-size: 0.85rem;
             color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        /* Responsividade */
-        @media (max-width: 768px) {
+        /* Responsividade Avançada */
+        @media (max-width: 900px) {
+            .login-wrapper {
+                max-width: 480px;
+                height: auto;
+                margin: 15px;
+            }
             .login-banner {
                 display: none;
             }
-            .login-wrapper {
-                max-width: 450px;
-                height: auto;
+            .login-form-container {
+                padding: 40px 30px;
             }
         }
     </style>
@@ -279,7 +325,7 @@ if (!isset($_SESSION['form_start_time'])) {
                 }
             ?>
 
-            <form action="/auth" method="POST">
+            <form action="/auth" method="POST" autocomplete="off">
                 
                 <!-- CAMPO ARMADILHA (ANTI-BOT / HONEYPOT) -->
                 <div class="pot-field">
@@ -291,7 +337,7 @@ if (!isset($_SESSION['form_start_time'])) {
                     <label for="email">E-mail Institucional / Credencial</label>
                     <div class="input-with-icon">
                         <i class="fas fa-user-shield"></i>
-                        <input type="email" id="email" name="email" placeholder="usuario@uncisal.edu.br" required autocomplete="email">
+                        <input type="email" id="email" name="email" placeholder="usuario@uncisal.edu.br" required autocomplete="username">
                     </div>
                 </div>
                 
@@ -299,7 +345,8 @@ if (!isset($_SESSION['form_start_time'])) {
                     <label for="senha">Chave de Acesso / Senha</label>
                     <div class="input-with-icon">
                         <i class="fas fa-key"></i>
-                        <input type="password" id="senha" name="senha" placeholder="••••••••••••" required>
+                        <!-- Atributo placeholder removido para evitar exibição pré-preenchida -->
+                        <input type="password" id="senha" name="senha" required autocomplete="current-password">
                     </div>
                 </div>
 
