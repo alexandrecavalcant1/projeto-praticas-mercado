@@ -1,23 +1,83 @@
 # Projeto Aplicado: Práticas de Mercado - Secure by Design
 
-Este repositório contém o protótipo de software desenvolvido para a avaliação final da disciplina, implementando uma esteira completa de DevSecOps, infraestrutura segura em nuvem (Oracle Cloud Free Tier) e automação via GitHub Actions.
+Este repositório contém o protótipo de software desenvolvido para a avaliação final da pós-graduação em **Segurança da Informação & Análise Forense Digital (UNCISAL)**, implementando princípios rigorosos de **Secure by Design**, esteira DevSecOps, infraestrutura segura em nuvem (Oracle Cloud Free Tier) e automação via GitHub Actions.
+
+---
 
 ## 🚀 Eixo 1: Infraestrutura e Acesso
 - **IP Público:** `163.176.146.51`
-- **Endereço SSL/TLS:** `- **Domínio SSL:** `https://projetoforense.freedynamicdns.net``
-- **Servidor Web:** Nginx (com redirecionamento automático de HTTP para HTTPS e suporte a TLS/PQC)
-- **Segurança de Acesso:** Chaves SSH obrigatórias e Fail2Ban configurado na porta 22.
-
-## 📦 Eixo 2: Versionamento e Segurança
-- **Repositório:** Público no GitHub (`projeto-praticas-mercado`)
-- **Boas Práticas:** Uso rigoroso de `.gitignore` para exclusão de arquivos de ambiente (`.env`), chaves privadas e credenciais.
-
-## 💻 Eixo 3: Mitigações de Segurança (OWASP Top 10)
-Este projeto mitiga ativamente três vulnerabilidades do OWASP Top 10:
-
-1. **Broken Access Control (A01:2021):** Mitigada no arquivo `dashboard.php` através de uma validação rigorosa da variável `$_SESSION['logado']` no topo do código. Qualquer acesso direto à URL sem autenticação prévia é bloqueado e o usuário é redirecionado.
-2. **Injection / Cross-Site Scripting (A03:2021):** Mitigada no arquivo `login.php`. Todas as mensagens de erro retornadas ao usuário são filtradas pela função `htmlspecialchars(..., ENT_QUOTES, 'UTF-8')`, garantindo a sanitização da saída de dados e impedindo a injeção e execução de scripts maliciosos na interface.
-3. **Identification and Authentication Failures (A07:2021):** Mitigada no arquivo `login.php`. Após a validação bem-sucedida das credenciais, o sistema utiliza a função `session_regenerate_id(true)`. Isso previne ataques de Fixação de Sessão (*Session Fixation*), renovando o identificador do usuário antes de conceder o acesso à área restrita.
+- **Domínio com SSL/TLS:** `https://projetoforense.freedynamicdns.net`
+- **Servidor Web:** Nginx (redirecionamento obrigatório HTTP -> HTTPS, suporte a TLS moderno)
+- **Segurança de Host:** Autenticação SSH restrita por chave criptográfica e Fail2Ban configurado.
 
 ---
-*Desenvolvido com práticas de Secure by Design e automação CI/CD via GitHub Actions.*
+
+## 📦 Eixo 2: Arquitetura dos Três Arquivos Principais
+
+O sistema foi estruturado em três arquivos centrais em PHP que atuam de forma coordenada e resiliente:
+
+### 1. `index.php` (Tela de Login & Defesa Perimetral)
+- **Interface Estilizada:** Design moderno com estética Dark Cyber / SOC Forense (UNCISAL SegInfo).
+- **Mecanismo Anti-Bot Honeypot:** Campos armadilha invisíveis no DOM (`contact_fax_hp` e `website_url`) que interceptam e bloqueiam crawlers e robôs antes de processar qualquer requisição.
+- **Proteção Anti-CSRF:** Geração e validação de tokens pseudoaleatórios criptográficos (`random_bytes`).
+- **Headers HTTP de Segurança:** `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `X-XSS-Protection`, `Referrer-Policy` e `Permissions-Policy`.
+- **Mensagens Contextuais:** Tratamento seguro de feedbacks de erro (credenciais inválidas, bloqueio temporário, suspeita de bot, expiração de sessão).
+
+### 2. `auth.php` (Backend de Autenticação Segura)
+- **Mitigação de SQL Injection (OWASP A03):** Conexão via PDO com consultas parametrizadas obrigatórias (*Prepared Statements*) e `ATTR_EMULATE_PREPARES => false`.
+- **Prevenção de Fixação de Sessão (OWASP A07):** Invocação compulsória de `session_regenerate_id(true)` no momento da validação das credenciais.
+- **Rate Limiting & Bloqueio por Força Bruta:** Monitoramento do campo `tentativas_falhas`. Após **3 erros consecutivos**, a credencial é posta em quarentena com bloqueio temporário (`bloqueado_ate`) de 5 minutos.
+- **Hashing Criptográfico de Senhas:** Validação via `password_verify()` e geração com algoritmo padrão da indústria (`BCRYPT`).
+- **Mitigação de Timing Attacks:** Execução de hash simulado com tempo uniforme em casos de usuário inexistente para impedir enumeração de contas (*Account Enumeration*).
+- **Alta Resiliência de Conexão:** Tenta MySQL primariamente e possui fallback automático para SQLite em ambientes locais de avaliação.
+
+### 3. `dashboard.php` (Área Restrita & Telemetria)
+- **Controle de Acesso Quebrado (OWASP A01):** Validação estrita server-side da sessão (`$_SESSION['logado']` e `$_SESSION['usuario_id']`). Acessos diretos sem autenticação são imediatamente interceptados.
+- **Anti-Session Hijacking:** Validação da assinatura do `User-Agent` da requisição comparada com o momento da autenticação.
+- **Timeout por Inatividade:** Destruição automática da sessão após 15 minutos (900 segundos) sem atividade do usuário.
+- **Mitigação de XSS (OWASP A03):** Escapamento rigoroso de variáveis de saída com `htmlspecialchars(..., ENT_QUOTES, 'UTF-8')`.
+- **Botão de Logout Seguro:** Destruição total das variáveis de sessão, invalidação do cookie no navegador e redirecionamento seguro para `index.php?logout=1`.
+
+---
+
+## 🔑 Credenciais Padrão para Avaliação
+
+| Papel | E-mail Institucional | Senha |
+|---|---|---|
+| Administrador SOC | `admin@uncisal.edu.br` | `Admin@123456` |
+
+---
+
+## 🗄️ Estrutura do Banco de Dados
+
+Caso queira importar manualmente no MySQL, utilize o arquivo `schema.sql`:
+
+```sql
+CREATE DATABASE IF NOT EXISTS `sistema_seguranca` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `sistema_seguranca`;
+
+CREATE TABLE `usuarios` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `nome` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(150) NOT NULL UNIQUE,
+    `senha` VARCHAR(255) NOT NULL,
+    `tentativas_falhas` INT DEFAULT 0,
+    `bloqueado_ate` DATETIME NULL,
+    `criado_em` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
+
+---
+
+## 🛡️ Matriz de Mitigações OWASP Top 10 & Práticas de Mercado
+
+| Vulnerabilidade OWASP | Risco Mitigado | Arquivo / Mecanismo de Defesa |
+|---|---|---|
+| **A01: Broken Access Control** | Acesso indevido a páginas internas | `dashboard.php`: checagem de sessão no topo e amarração ao User-Agent |
+| **A02: Cryptographic Failures** | Exposição e roubo de credenciais | Criptografia forte via `password_hash()` BCRYPT e tráfego HTTPS/TLS |
+| **A03: Injection** | SQL Injection e Cross-Site Scripting (XSS) | `auth.php` (PDO Prepared Statements) e `dashboard.php` (`htmlspecialchars`) |
+| **A07: Identification & Auth Failures** | Força Bruta e Fixação de Sessão | `auth.php` (`session_regenerate_id(true)` e bloqueio após 3 tentativas) |
+| **Anti-Automation Defense** | Scanners maliciosos e spiders | `index.php` e `auth.php` (Defesa Ativa com Honeypot invisível) |
+
+---
+*Desenvolvido em conformidade com os preceitos de Secure by Design para a Pós-Graduação em Segurança da Informação & Análise Forense Digital.*

@@ -1,21 +1,29 @@
 <?php
-session_start();
+// Configurações de Sessão e Cookies Seguros
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Destrói todas as variáveis de sessão
-$_SESSION = array();
+// 1. Limpa todas as variáveis de sessão da memória do servidor
+$_SESSION = [];
 
-// Destrói o cookie da sessão, se existir
+// 2. Destrói o cookie de sessão no navegador do cliente (limpeza forçada)
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
+    setcookie(
+        session_name(),
+        '',
+        time() - 42000,
+        $params["path"],
+        $params["domain"],
+        $params["secure"],
+        $params["httponly"]
     );
 }
 
-// Destrói a sessão no servidor
+// 3. Destrói a sessão persistida no servidor
 session_destroy();
 
-// Redireciona para a tela de login
-header("Location: login.php");
+// 4. Redireciona para a tela inicial de autenticação informando logout bem-sucedido
+header("Location: index.php?logout=1");
 exit;
