@@ -24,16 +24,12 @@ CREATE TABLE `usuarios` (
     `criado_em` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. Inserção do Usuário Administrador de Testes
--- Credenciais de Avaliação:
---   E-mail: admin@uncisal.edu.br
---   Senha:  Admin@123456
--- Hash gerado via password_hash('Admin@123456', PASSWORD_DEFAULT):
+
 INSERT INTO `usuarios` (`nome`, `email`, `senha`, `tentativas_falhas`, `bloqueado_ate`)
 VALUES (
-    'Administrador de Segurança',
-    'admin@uncisal.edu.br',
-    '$2y$10$wT8v7V7zF2R6A3a8j2KquO0sZ7Q6I2d8y0iG8ZkC9mU1l1o1N7v9m',
+    '',
+    '',
+    '',
     0,
     NULL
 );
