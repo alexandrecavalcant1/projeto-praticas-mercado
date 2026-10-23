@@ -7,7 +7,7 @@ Este repositório contém o protótipo de software desenvolvido para a avaliaç�
 ## 🚀 Eixo 1: Infraestrutura e Acesso
 - **IP Público:** `163.176.146.51`
 - **Domínio com SSL/TLS:** `https://projetoforense.freedynamicdns.net`
-- **Servidor Web:** Nginx (redirecionamento obrigatório HTTP -> HTTPS, suporte a TLS moderno)
+- **Servidor Web:** Apache HTTP Server (redirecionamento obrigatório HTTP -> HTTPS via `mod_rewrite`, suporte a TLS moderno e diretivas de segurança via `.htaccess`)
 - **Segurança de Host:** Autenticação SSH restrita por chave criptográfica e Fail2Ban configurado.
 
 ---
