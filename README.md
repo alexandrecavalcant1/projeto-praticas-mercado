@@ -40,34 +40,10 @@ O sistema foi estruturado em três arquivos centrais em PHP que atuam de forma c
 
 ---
 
-## 🔑 Credenciais Padrão para Avaliação
-
-| Papel | E-mail Institucional | Senha |
-|---|---|---|
-| Administrador SOC | `admin@uncisal.edu.br` | `Admin@123456` |
-
----
-
 ## 🗄️ Estrutura do Banco de Dados
 
 Caso queira importar manualmente no MySQL, utilize o arquivo `schema.sql`:
 
-```sql
-CREATE DATABASE IF NOT EXISTS `sistema_seguranca` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `sistema_seguranca`;
-
-CREATE TABLE `usuarios` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `nome` VARCHAR(100) NOT NULL,
-    `email` VARCHAR(150) NOT NULL UNIQUE,
-    `senha` VARCHAR(255) NOT NULL,
-    `tentativas_falhas` INT DEFAULT 0,
-    `bloqueado_ate` DATETIME NULL,
-    `criado_em` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-```
-
----
 
 ## 🛡️ Matriz de Mitigações OWASP Top 10 & Práticas de Mercado
 
